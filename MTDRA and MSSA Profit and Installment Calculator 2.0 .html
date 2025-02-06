@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Islami Bank Bangladesh PLC - Profit Calculator</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #004d40;
+      color: white;
+    }
+
+    header .logo img {
+      height: 50px;
+    }
+
+    header .datetime {
+      font-size: 16px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #004d40;
+      margin-bottom: 20px;
+    }
+
+    .calculator {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .input-section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+
+    .input-section h2 {
+      margin-top: 0;
+      color: #004d40;
+    }
+
+    .input-section label {
+      display: block;
+      margin: 10px 0 5px;
+      color: #004d40;
+    }
+
+    .input-section input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .input-section button {
+      padding: 10px 20px;
+      background-color: #004d40;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .input-section button:hover {
+      background-color: #00332a;
+    }
+
+    .output-section {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #mssaResult, #mtdraResult, #installmentResult {
+      font-weight: bold;
+    }
+
+    .minus {
+      color: red;
+    }
+
+    .total {
+      color: orange;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .calculator {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      header .datetime {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="https://islamibankbd.com/public/frontend/assets/images/IBBL-logo-Eng.png" alt="Islami Bank Bangladesh PLC">
+    </div>
+    <div class="datetime">
+      <span id="currentDateTime"></span>
+    </div>
+  </header>
+  <main>
+    <h1>Profit Calculator</h1>
+    <div class="calculator">
+      <!-- MSSA Calculator -->
+      <div class="input-section">
+        <h2>MSSA Account</h2>
+        <label for="mssaYears">Years:</label>
+        <input type="number" id="mssaYears" value="5">
+        <label for="mssaInstallment">Installment (Tk):</label>
+        <input type="number" id="mssaInstallment" value="5000">
+        <label for="mssaProfitRate">Profit Rate (%):</label>
+        <input type="number" id="mssaProfitRate" value="7">
+        <button onclick="calculateMSSA()">Calculate MSSA</button>
+        <button onclick="resetMSSA()">Reset</button>
+        <div class="output-section" id="mssaResult"></div>
+      </div>
+
+      <!-- MTDRA Calculator -->
+      <div class="input-section">
+        <h2>MTDRA Account</h2>
+        <label for="mtdraYears">Years:</label>
+        <input type="number" id="mtdraYears" value="0.25">
+        <label for="mtdraPrincipal">Principal (Tk):</label>
+        <input type="number" id="mtdraPrincipal" value="500000">
+        <label for="mtdraProfitRate">Profit Rate (%):</label>
+        <input type="number" id="mtdraProfitRate" value="10">
+        <button onclick="calculateMTDRA()">Calculate MTDRA</button>
+        <button onclick="resetMTDRA()">Reset</button>
+        <div class="output-section" id="mtdraResult"></div>
+      </div>
+
+      <!-- MSSA Installment Calculator -->
+      <div class="input-section">
+        <h2>MSSA Installment Calculator</h2>
+        <label for="openingDate">Account Opening Date:</label>
+        <input type="date" id="openingDate">
+        <label for="paidInstallments">Paid Installments:</label>
+        <input type="number" id="paidInstallments" value="0">
+        <button onclick="calculateInstallments()">Calculate Due/Advance</button>
+        <button onclick="resetInstallments()">Reset</button>
+        <div class="output-section" id="installmentResult"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Function to update date and time
+    function updateDateTime() {
+      const now = new Date();
+      const dateTimeString = now.toLocaleString();
+      document.getElementById('currentDateTime').textContent = dateTimeString;
+    }
+
+    // Update date and time every second
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    // Function to calculate MSSA
+    function calculateMSSA() {
+      const years = parseFloat(document.getElementById('mssaYears').value);
+      const installment = parseFloat(document.getElementById('mssaInstallment').value);
+      const profitRate = parseFloat(document.getElementById('mssaProfitRate').value);
+
+      const totalMonths = years * 12;
+      const totalPrincipal = installment * totalMonths;
+
+      // Compound interest calculation for monthly contributions
+      const monthlyRate = profitRate / 100 / 12;
+      let futureValue = 0;
+      for (let i = 0; i < totalMonths; i++) {
+        futureValue += installment * Math.pow(1 + monthlyRate, totalMonths - i);
+      }
+
+      const totalProfit = futureValue - totalPrincipal;
+      const vat = totalProfit * 0.15;
+      const closingCharges = 150 * 1.15;
+      const exciseDuty = calculateExciseDuty(totalPrincipal);
+
+      const netProfit = totalProfit - vat - closingCharges - exciseDuty;
+      const totalAmount = totalPrincipal + netProfit;
+
+      document.getElementById('mssaResult').innerHTML = `
+        <strong>MSSA Results:</strong><br>
+        Total Principal: ${totalPrincipal.toFixed(2)} Tk<br>
+        Total Profit: ${totalProfit.toFixed(2)} Tk<br>
+        VAT (15%): <span class="minus">-${vat.toFixed(2)} Tk</span><br>
+        Closing Charges: <span class="minus">-${closingCharges.toFixed(2)} Tk</span><br>
+        Excise Duty: <span class="minus">-${exciseDuty.toFixed(2)} Tk</span><br>
+        Net Profit: ${netProfit.toFixed(2)} Tk<br>
+        Total Amount: <span class="total">${totalAmount.toFixed(2)} Tk</span>
+      `;
+    }
+
+    // Function to reset MSSA inputs and results
+    function resetMSSA() {
+      document.getElementById('mssaYears').value = 5;
+      document.getElementById('mssaInstallment').value = 5000;
+      document.getElementById('mssaProfitRate').value = 7;
+      document.getElementById('mssaResult').innerHTML = '';
+    }
+
+    // Function to calculate MTDRA
+    function calculateMTDRA() {
+      const years = parseFloat(document.getElementById('mtdraYears').value);
+      const principal = parseFloat(document.getElementById('mtdraPrincipal').value);
+      const profitRate = parseFloat(document.getElementById('mtdraProfitRate').value);
+
+      const totalProfit = principal * (profitRate / 100) * years;
+      const vat = totalProfit * 0.15;
+      const closingCharges = 150 * 1.15;
+      const exciseDuty = calculateExciseDuty(principal);
+
+      const netProfit = totalProfit - vat - closingCharges - exciseDuty;
+      const totalAmount = principal + netProfit;
+
+      document.getElementById('mtdraResult').innerHTML = `
+        <strong>MTDRA Results:</strong><br>
+        Principal: ${principal.toFixed(2)} Tk<br>
+        Total Profit: ${totalProfit.toFixed(2)} Tk<br>
+        VAT (15%): <span class="minus">-${vat.toFixed(2)} Tk</span><br>
+        Closing Charges: <span class="minus">-${closingCharges.toFixed(2)} Tk</span><br>
+        Excise Duty: <span class="minus">-${exciseDuty.toFixed(2)} Tk</span><br>
+        Net Profit: ${netProfit.toFixed(2)} Tk<br>
+        Total Amount: <span class="total">${totalAmount.toFixed(2)} Tk</span>
+      `;
+    }
+
+    // Function to reset MTDRA inputs and results
+    function resetMTDRA() {
+      document.getElementById('mtdraYears').value = 0.25;
+      document.getElementById('mtdraPrincipal').value = 500000;
+      document.getElementById('mtdraProfitRate').value = 10;
+      document.getElementById('mtdraResult').innerHTML = '';
+    }
+
+    // Function to calculate Excise Duty
+    function calculateExciseDuty(principal) {
+      if (principal <= 100000) return 0;
+      else if (principal <= 500000) return 150;
+      else if (principal <= 1000000) return 500;
+      else if (principal <= 5000000) return 3000;
+      else if (principal <= 10000000) return 5000;
+      else if (principal <= 20000000) return 10000;
+      else if (principal <= 50000000) return 20000;
+      else return 50000;
+    }
+
+    // Function to calculate Due/Advance Installments
+    function calculateInstallments() {
+      const openingDate = new Date(document.getElementById('openingDate').value);
+      const currentDate = new Date();
+      const paidInstallments = parseInt(document.getElementById('paidInstallments').value);
+
+      const totalMonths = (currentDate.getFullYear() - openingDate.getFullYear()) * 12 + (currentDate.getMonth() - openingDate.getMonth());
+      const dueInstallments = totalMonths - paidInstallments;
+
+      if (dueInstallments > 0) {
+        document.getElementById('installmentResult').innerHTML = `
+          <strong>Due Installments:</strong> <span class="minus">${dueInstallments}</span>
+        `;
+      } else if (dueInstallments < 0) {
+        document.getElementById('installmentResult').innerHTML = `
+          <strong>Advanced Installments:</strong> <span class="total">${Math.abs(dueInstallments)}</span>
+        `;
+      } else {
+        document.getElementById('installmentResult').innerHTML = `
+          <strong>No Due or Advanced Installments</strong>
+        `;
+      }
+    }
+
+    // Function to reset Installment inputs and results
+    function resetInstallments() {
+      document.getElementById('openingDate').value = '';
+      document.getElementById('paidInstallments').value = 0;
+      document.getElementById('installmentResult').innerHTML = '';
+    }
+  </script>
+</body>
+</html>
