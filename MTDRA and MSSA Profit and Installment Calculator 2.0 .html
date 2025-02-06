@@ -10,8 +10,31 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f4;
-      color: #333;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --header-bg: #004d40;
+      --header-text: #ffffff;
+      --button-bg: #004d40;
+      --button-text: #ffffff;
+      --input-bg: #f4f4f4;
+      --input-text: #000000;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #ffffff;
+      --header-bg: #00332a;
+      --header-text: #ffffff;
+      --button-bg: #00332a;
+      --button-text: #ffffff;
+      --input-bg: #333333;
+      --input-text: #ffffff;
     }
 
     header {
@@ -19,8 +42,8 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px 20px;
-      background-color: #004d40;
-      color: white;
+      background-color: var(--header-bg);
+      color: var(--header-text);
     }
 
     header .logo img {
@@ -28,9 +51,7 @@
     }
 
     header .datetime {
-      font-size: 16px;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      font-size: 14px;
     }
 
     main {
@@ -39,36 +60,43 @@
 
     h1 {
       text-align: center;
-      color: #004d40;
+      color: var(--header-bg);
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
       margin-bottom: 20px;
+    }
+
+    .navigation button {
+      padding: 10px 20px;
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .navigation button:hover {
+      opacity: 0.9;
     }
 
     .calculator {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .input-section {
-      background-color: white;
+      background-color: var(--input-bg);
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-      margin-bottom: 20px;
     }
 
-    .input-section h2 {
-      margin-top: 0;
-      color: #004d40;
+    .input-section {
+      margin-bottom: 20px;
     }
 
     .input-section label {
       display: block;
       margin: 10px 0 5px;
-      color: #004d40;
     }
 
     .input-section input {
@@ -77,56 +105,44 @@
       margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      background-color: var(--input-bg);
+      color: var(--input-text);
     }
 
     .input-section button {
       padding: 10px 20px;
-      background-color: #004d40;
-      color: white;
+      background-color: var(--button-bg);
+      color: var(--button-text);
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      margin-right: 10px;
     }
 
     .input-section button:hover {
-      background-color: #00332a;
+      opacity: 0.9;
     }
 
     .output-section {
       margin-top: 20px;
-      padding: 20px;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    #mssaResult, #mtdraResult, #installmentResult {
+    .output-section p {
       font-weight: bold;
-    }
-
-    .minus {
-      color: red;
-    }
-
-    .total {
-      color: orange;
     }
 
     /* Responsive Design */
     @media (max-width: 768px) {
-      .calculator {
-        flex-direction: column;
-        align-items: center;
-      }
-
       header {
         flex-direction: column;
         text-align: center;
       }
 
-      header .datetime {
-        margin-top: 10px;
+      .navigation {
+        flex-direction: column;
+      }
+
+      .navigation button {
+        width: 100%;
       }
     }
   </style>
@@ -142,10 +158,16 @@
   </header>
   <main>
     <h1>Profit Calculator</h1>
-    <div class="calculator">
-      <!-- MSSA Calculator -->
+    <div class="navigation">
+      <button onclick="showPage('page1')">MSSA Calculator</button>
+      <button onclick="showPage('page2')">MTDRA Calculator</button>
+      <button onclick="showPage('page3')">MSSA Installment Calculator</button>
+    </div>
+
+    <!-- Page 1: MSSA Calculator -->
+    <div id="page1" class="calculator">
+      <h2>MSSA Calculator</h2>
       <div class="input-section">
-        <h2>MSSA Account</h2>
         <label for="mssaYears">Years:</label>
         <input type="number" id="mssaYears" value="5">
         <label for="mssaInstallment">Installment (Tk):</label>
@@ -153,13 +175,16 @@
         <label for="mssaProfitRate">Profit Rate (%):</label>
         <input type="number" id="mssaProfitRate" value="7">
         <button onclick="calculateMSSA()">Calculate MSSA</button>
-        <button onclick="resetMSSA()">Reset</button>
-        <div class="output-section" id="mssaResult"></div>
       </div>
+      <div class="output-section">
+        <p id="mssaResult"></p>
+      </div>
+    </div>
 
-      <!-- MTDRA Calculator -->
+    <!-- Page 2: MTDRA Calculator -->
+    <div id="page2" class="calculator" style="display: none;">
+      <h2>MTDRA Calculator</h2>
       <div class="input-section">
-        <h2>MTDRA Account</h2>
         <label for="mtdraYears">Years:</label>
         <input type="number" id="mtdraYears" value="0.25">
         <label for="mtdraPrincipal">Principal (Tk):</label>
@@ -167,37 +192,79 @@
         <label for="mtdraProfitRate">Profit Rate (%):</label>
         <input type="number" id="mtdraProfitRate" value="10">
         <button onclick="calculateMTDRA()">Calculate MTDRA</button>
-        <button onclick="resetMTDRA()">Reset</button>
-        <div class="output-section" id="mtdraResult"></div>
       </div>
+      <div class="output-section">
+        <p id="mtdraResult"></p>
+      </div>
+    </div>
 
-      <!-- MSSA Installment Calculator -->
+    <!-- Page 3: MSSA Installment Calculator -->
+    <div id="page3" class="calculator" style="display: none;">
+      <h2>MSSA Installment Calculator</h2>
       <div class="input-section">
-        <h2>MSSA Installment Calculator</h2>
         <label for="openingDate">Account Opening Date:</label>
         <input type="date" id="openingDate">
+        <label for="matureDate">Mature Date:</label>
+        <input type="date" id="matureDate">
         <label for="paidInstallments">Paid Installments:</label>
         <input type="number" id="paidInstallments" value="0">
-        <button onclick="calculateInstallments()">Calculate Due/Advance</button>
-        <button onclick="resetInstallments()">Reset</button>
-        <div class="output-section" id="installmentResult"></div>
+        <button onclick="calculateDueInstallments()">Calculate Due Installments</button>
+      </div>
+      <div class="output-section">
+        <p id="installmentResult"></p>
       </div>
     </div>
   </main>
 
   <script>
-    // Function to update date and time
+    // Theme Toggle
+    const themeToggle = document.createElement('button');
+    themeToggle.textContent = 'Toggle Theme';
+    themeToggle.style.position = 'fixed';
+    themeToggle.style.bottom = '20px';
+    themeToggle.style.right = '20px';
+    themeToggle.style.padding = '10px 20px';
+    themeToggle.style.backgroundColor = 'var(--button-bg)';
+    themeToggle.style.color = 'var(--button-text)';
+    themeToggle.style.border = 'none';
+    themeToggle.style.borderRadius = '4px';
+    themeToggle.style.cursor = 'pointer';
+    themeToggle.onclick = toggleTheme;
+    document.body.appendChild(themeToggle);
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      if (root.getAttribute('data-theme') === 'dark') {
+        root.removeAttribute('data-theme');
+      } else {
+        root.setAttribute('data-theme', 'dark');
+      }
+    }
+
+    // Set theme based on device preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+
+    // Update Date and Time
     function updateDateTime() {
       const now = new Date();
       const dateTimeString = now.toLocaleString();
       document.getElementById('currentDateTime').textContent = dateTimeString;
     }
 
-    // Update date and time every second
     setInterval(updateDateTime, 1000);
     updateDateTime();
 
-    // Function to calculate MSSA
+    // Show Page Function
+    function showPage(pageId) {
+      document.querySelectorAll('.calculator').forEach(page => {
+        page.style.display = 'none';
+      });
+      document.getElementById(pageId).style.display = 'block';
+    }
+
+    // MSSA Calculation
     function calculateMSSA() {
       const years = parseFloat(document.getElementById('mssaYears').value);
       const installment = parseFloat(document.getElementById('mssaInstallment').value);
@@ -206,7 +273,6 @@
       const totalMonths = years * 12;
       const totalPrincipal = installment * totalMonths;
 
-      // Compound interest calculation for monthly contributions
       const monthlyRate = profitRate / 100 / 12;
       let futureValue = 0;
       for (let i = 0; i < totalMonths; i++) {
@@ -225,23 +291,15 @@
         <strong>MSSA Results:</strong><br>
         Total Principal: ${totalPrincipal.toFixed(2)} Tk<br>
         Total Profit: ${totalProfit.toFixed(2)} Tk<br>
-        VAT (15%): <span class="minus">-${vat.toFixed(2)} Tk</span><br>
-        Closing Charges: <span class="minus">-${closingCharges.toFixed(2)} Tk</span><br>
-        Excise Duty: <span class="minus">-${exciseDuty.toFixed(2)} Tk</span><br>
+        VAT (15%): -${vat.toFixed(2)} Tk<br>
+        Closing Charges: -${closingCharges.toFixed(2)} Tk<br>
+        Excise Duty: -${exciseDuty.toFixed(2)} Tk<br>
         Net Profit: ${netProfit.toFixed(2)} Tk<br>
-        Total Amount: <span class="total">${totalAmount.toFixed(2)} Tk</span>
+        Total Amount: ${totalAmount.toFixed(2)} Tk
       `;
     }
 
-    // Function to reset MSSA inputs and results
-    function resetMSSA() {
-      document.getElementById('mssaYears').value = 5;
-      document.getElementById('mssaInstallment').value = 5000;
-      document.getElementById('mssaProfitRate').value = 7;
-      document.getElementById('mssaResult').innerHTML = '';
-    }
-
-    // Function to calculate MTDRA
+    // MTDRA Calculation
     function calculateMTDRA() {
       const years = parseFloat(document.getElementById('mtdraYears').value);
       const principal = parseFloat(document.getElementById('mtdraPrincipal').value);
@@ -259,23 +317,36 @@
         <strong>MTDRA Results:</strong><br>
         Principal: ${principal.toFixed(2)} Tk<br>
         Total Profit: ${totalProfit.toFixed(2)} Tk<br>
-        VAT (15%): <span class="minus">-${vat.toFixed(2)} Tk</span><br>
-        Closing Charges: <span class="minus">-${closingCharges.toFixed(2)} Tk</span><br>
-        Excise Duty: <span class="minus">-${exciseDuty.toFixed(2)} Tk</span><br>
+        VAT (15%): -${vat.toFixed(2)} Tk<br>
+        Closing Charges: -${closingCharges.toFixed(2)} Tk<br>
+        Excise Duty: -${exciseDuty.toFixed(2)} Tk<br>
         Net Profit: ${netProfit.toFixed(2)} Tk<br>
-        Total Amount: <span class="total">${totalAmount.toFixed(2)} Tk</span>
+        Total Amount: ${totalAmount.toFixed(2)} Tk
       `;
     }
 
-    // Function to reset MTDRA inputs and results
-    function resetMTDRA() {
-      document.getElementById('mtdraYears').value = 0.25;
-      document.getElementById('mtdraPrincipal').value = 500000;
-      document.getElementById('mtdraProfitRate').value = 10;
-      document.getElementById('mtdraResult').innerHTML = '';
+    // MSSA Installment Calculation
+    function calculateDueInstallments() {
+      const openingDate = new Date(document.getElementById('openingDate').value);
+      const matureDate = new Date(document.getElementById('matureDate').value);
+      const paidInstallments = parseFloat(document.getElementById('paidInstallments').value);
+
+      const currentDate = new Date();
+      const totalMonths = (matureDate.getFullYear() - openingDate.getFullYear()) * 12 + (matureDate.getMonth() - openingDate.getMonth());
+      const elapsedMonths = (currentDate.getFullYear() - openingDate.getFullYear()) * 12 + (currentDate.getMonth() - openingDate.getMonth());
+
+      const dueInstallments = elapsedMonths - paidInstallments;
+
+      document.getElementById('installmentResult').innerHTML = `
+        <strong>Installment Results:</strong><br>
+        Total Installments: ${totalMonths}<br>
+        Elapsed Months: ${elapsedMonths}<br>
+        Paid Installments: ${paidInstallments}<br>
+        Due Installments: ${dueInstallments}
+      `;
     }
 
-    // Function to calculate Excise Duty
+    // Excise Duty Calculation
     function calculateExciseDuty(principal) {
       if (principal <= 100000) return 0;
       else if (principal <= 500000) return 150;
@@ -285,37 +356,6 @@
       else if (principal <= 20000000) return 10000;
       else if (principal <= 50000000) return 20000;
       else return 50000;
-    }
-
-    // Function to calculate Due/Advance Installments
-    function calculateInstallments() {
-      const openingDate = new Date(document.getElementById('openingDate').value);
-      const currentDate = new Date();
-      const paidInstallments = parseInt(document.getElementById('paidInstallments').value);
-
-      const totalMonths = (currentDate.getFullYear() - openingDate.getFullYear()) * 12 + (currentDate.getMonth() - openingDate.getMonth());
-      const dueInstallments = totalMonths - paidInstallments;
-
-      if (dueInstallments > 0) {
-        document.getElementById('installmentResult').innerHTML = `
-          <strong>Due Installments:</strong> <span class="minus">${dueInstallments}</span>
-        `;
-      } else if (dueInstallments < 0) {
-        document.getElementById('installmentResult').innerHTML = `
-          <strong>Advanced Installments:</strong> <span class="total">${Math.abs(dueInstallments)}</span>
-        `;
-      } else {
-        document.getElementById('installmentResult').innerHTML = `
-          <strong>No Due or Advanced Installments</strong>
-        `;
-      }
-    }
-
-    // Function to reset Installment inputs and results
-    function resetInstallments() {
-      document.getElementById('openingDate').value = '';
-      document.getElementById('paidInstallments').value = 0;
-      document.getElementById('installmentResult').innerHTML = '';
     }
   </script>
 </body>
