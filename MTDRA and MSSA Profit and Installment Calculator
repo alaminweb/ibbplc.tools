@@ -20,12 +20,14 @@
       --text-color: #000000;
       --header-bg: #f4f4f4;
       --header-text: #000000;
-      --button-bg: #004d40;
+      --button-bg: #008641;
       --button-text: #ffffff;
       --input-bg: #f4f4f4;
       --input-text: #000000;
       --result-bg: #e0f7fa;
       --result-text: #004d40;
+      --charge-text: #ff0000;
+      --total-text: #d4a404;
     }
 
     [data-theme="dark"] {
@@ -33,12 +35,14 @@
       --text-color: #ffffff;
       --header-bg: #1e1e1e;
       --header-text: #ffffff;
-      --button-bg: #00332a;
+      --button-bg: #008641;
       --button-text: #ffffff;
       --input-bg: #333333;
       --input-text: #ffffff;
       --result-bg: #00332a;
       --result-text: #ffffff;
+      --charge-text: #ff6666;
+      --total-text: #ffcc00;
     }
 
     header {
@@ -147,6 +151,23 @@
     .output-section p {
       margin: 5px 0;
       font-size: 14px;
+      padding: 5px 0;
+    }
+
+    .output-section strong {
+      display: block;
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .output-section .charge {
+      color: var(--charge-text);
+    }
+
+    .output-section .total {
+      font-weight: bold;
+      color: var(--total-text);
     }
 
     /* Responsive Design */
@@ -310,14 +331,14 @@
       const totalAmount = totalPrincipal + netProfit;
 
       document.getElementById('mssaResult').innerHTML = `
-        <strong>MSSA Results:</strong><br>
-        Total Principal: ${totalPrincipal.toFixed(2)} Tk<br>
-        Total Profit: ${totalProfit.toFixed(2)} Tk<br>
-        VAT (15%): -${vat.toFixed(2)} Tk<br>
-        Closing Charges: -${closingCharges.toFixed(2)} Tk<br>
-        Excise Duty: -${exciseDuty.toFixed(2)} Tk<br>
-        Net Profit: ${netProfit.toFixed(2)} Tk<br>
-        Total Amount: ${totalAmount.toFixed(2)} Tk
+        <strong>MSSA Results:</strong>
+        <p>Total Principal: ${totalPrincipal.toFixed(2)} Tk</p>
+        <p>Total Profit: ${totalProfit.toFixed(2)} Tk</p>
+        <p class="charge">VAT (15%): -${vat.toFixed(2)} Tk</p>
+        <p class="charge">Closing Charges: -${closingCharges.toFixed(2)} Tk</p>
+        <p class="charge">Excise Duty: -${exciseDuty.toFixed(2)} Tk</p>
+        <p>Net Profit: ${netProfit.toFixed(2)} Tk</p>
+        <p class="total">Total Amount: ${totalAmount.toFixed(2)} Tk</p>
       `;
     }
 
@@ -344,14 +365,14 @@
       const totalAmount = principal + netProfit;
 
       document.getElementById('mtdraResult').innerHTML = `
-        <strong>MTDRA Results:</strong><br>
-        Principal: ${principal.toFixed(2)} Tk<br>
-        Total Profit: ${totalProfit.toFixed(2)} Tk<br>
-        VAT (15%): -${vat.toFixed(2)} Tk<br>
-        Closing Charges: -${closingCharges.toFixed(2)} Tk<br>
-        Excise Duty: -${exciseDuty.toFixed(2)} Tk<br>
-        Net Profit: ${netProfit.toFixed(2)} Tk<br>
-        Total Amount: ${totalAmount.toFixed(2)} Tk
+        <strong>MTDRA Results:</strong>
+        <p>Principal: ${principal.toFixed(2)} Tk</p>
+        <p>Total Profit: ${totalProfit.toFixed(2)} Tk</p>
+        <p class="charge">VAT (15%): -${vat.toFixed(2)} Tk</p>
+        <p class="charge">Closing Charges: -${closingCharges.toFixed(2)} Tk</p>
+        <p class="charge">Excise Duty: -${exciseDuty.toFixed(2)} Tk</p>
+        <p>Net Profit: ${netProfit.toFixed(2)} Tk</p>
+        <p class="total">Total Amount: ${totalAmount.toFixed(2)} Tk</p>
       `;
     }
 
@@ -376,11 +397,11 @@
       const dueInstallments = elapsedMonths - paidInstallments;
 
       document.getElementById('installmentResult').innerHTML = `
-        <strong>Installment Results:</strong><br>
-        Total Installments: ${totalMonths}<br>
-        Elapsed Months: ${elapsedMonths}<br>
-        Paid Installments: ${paidInstallments}<br>
-        Due Installments: ${dueInstallments}
+        <strong>Installment Results:</strong>
+        <p>Total Installments: ${totalMonths}</p>
+        <p>Elapsed Months: ${elapsedMonths}</p>
+        <p>Paid Installments: ${paidInstallments}</p>
+        <p>Due Installments: ${dueInstallments}</p>
       `;
     }
 
@@ -395,14 +416,4 @@
     // Excise Duty Calculation
     function calculateExciseDuty(principal) {
       if (principal <= 100000) return 0;
-      else if (principal <= 500000) return 150;
-      else if (principal <= 1000000) return 500;
-      else if (principal <= 5000000) return 3000;
-      else if (principal <= 10000000) return 5000;
-      else if (principal <= 20000000) return 10000;
-      else if (principal <= 50000000) return 20000;
-      else return 50000;
-    }
-  </script>
-</body>
-</html>
+      else if (principal <= 500000)
