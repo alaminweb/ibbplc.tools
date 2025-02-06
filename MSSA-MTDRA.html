@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Islami Bank Bangladesh PLC - Profit Calculator</title>
+  <title>IBBPLC Tools</title>
   <style>
     /* General Styles */
     body {
@@ -219,7 +219,7 @@
   </header>
   <main>
     <div class="calculator-container">
-      <h1>Profit Calculator</h1>
+      <h1>IBBPLC Tools</h1>
       <div class="navigation">
         <button onclick="showPage('page1')">MSSA</button>
         <button onclick="showPage('page2')">MTDRA</button>
@@ -228,7 +228,7 @@
 
       <!-- Page 1: MSSA Calculator -->
       <div id="page1" class="calculator">
-        <h2>MSSA Calculator</h2>
+        <h2>MSSA Profit Calculator</h2>
         <div class="input-section">
           <label for="mssaYears">Years:</label>
           <input type="number" id="mssaYears" value="5">
@@ -246,7 +246,7 @@
 
       <!-- Page 2: MTDRA Calculator -->
       <div id="page2" class="calculator" style="display: none;">
-        <h2>MTDRA Calculator</h2>
+        <h2>MTDRA Profit Calculator</h2>
         <div class="input-section">
           <label for="mtdraMonths">Months:</label>
           <input type="number" id="mtdraMonths" value="3">
@@ -272,7 +272,7 @@
           <input type="date" id="matureDate">
           <label for="paidInstallments">Paid Installments:</label>
           <input type="number" id="paidInstallments" value="0">
-          <button onclick="calculateDueInstallments()">Calculate Due Installments</button>
+          <button onclick="calculateDueInstallments()">Calculate Installments</button>
           <button onclick="resetInstallment()">Reset</button>
         </div>
         <div class="output-section">
@@ -424,12 +424,19 @@
 
       const dueInstallments = elapsedMonths - paidInstallments;
 
+      let installmentText = '';
+      if (dueInstallments >= 0) {
+        installmentText = `<span style="color: red; font-weight: bold;">Due Installment: ${dueInstallments}</span>`;
+      } else {
+        installmentText = `<span style="color: #d4a404; font-weight: bold;">Advance Installment: ${Math.abs(dueInstallments)}</span>`;
+      }
+
       document.getElementById('installmentResult').innerHTML = `
         <strong>Results:</strong>
         <p>Total Installments: ${totalMonths}</p>
         <p>Elapsed Months: ${elapsedMonths}</p>
         <p>Paid Installments: ${paidInstallments}</p>
-        <p>Due Installments: ${dueInstallments}</p>
+        <p>${installmentText}</p>
       `;
     }
 
@@ -442,14 +449,14 @@
     }
 
     // Excise Duty Calculation
-    function calculateExciseDuty(principal) {
-      if (principal <= 100000) return 0;
-      else if (principal <= 500000) return 150;
-      else if (principal <= 1000000) return 500;
-      else if (principal <= 5000000) return 3000;
-      else if (principal <= 10000000) return 5000;
-      else if (principal <= 20000000) return 10000;
-      else if (principal <= 50000000) return 20000;
+    function calculateExciseDuty(amount) {
+      if (amount <= 100000) return 0;
+      else if (amount <= 500000) return 150;
+      else if (amount <= 1000000) return 500;
+      else if (amount <= 5000000) return 3000;
+      else if (amount <= 10000000) return 5000;
+      else if (amount <= 20000000) return 10000;
+      else if (amount <= 50000000) return 20000;
       else return 50000;
     }
   </script>
