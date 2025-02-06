@@ -61,7 +61,7 @@
     header .datetime {
       font-size: 18px;
       font-weight: bold;
-      color: #888641; /* Updated date color */
+      color: #008641; /* Updated date color */
     }
 
     main {
@@ -96,6 +96,8 @@
       border-radius: 4px;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease; /* Button hover animation */
+      text-transform: uppercase; /* Uppercase button text */
+      font-weight: bold; /* Bold button text */
     }
 
     .navigation button:hover {
@@ -219,9 +221,9 @@
     <div class="calculator-container">
       <h1>Profit Calculator</h1>
       <div class="navigation">
-        <button onclick="showPage('page1')">MSSA Calculator</button>
-        <button onclick="showPage('page2')">MTDRA Calculator</button>
-        <button onclick="showPage('page3')">MSSA Installment Calculator</button>
+        <button onclick="showPage('page1')">MSSA CALCULATOR</button>
+        <button onclick="showPage('page2')">MTDRA CALCULATOR</button>
+        <button onclick="showPage('page3')">MSSA INSTALLMENT CALCULATOR</button>
       </div>
 
       <!-- Page 1: MSSA Calculator -->
@@ -308,8 +310,8 @@
     function updateDateTime() {
       const now = new Date();
       const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' };
-      const dateTimeString = now.toLocaleDateString('en-GB', dateOptions).replace(/ /g, ' '); // Format: 06 Jan 2025
-      document.getElementById('currentDateTime').textContent = dateTimeString;
+      const dateString = now.toLocaleDateString('en-GB', dateOptions).replace(/ /g, ' '); // Format: 06 Jan 2025
+      document.getElementById('currentDateTime').textContent = dateString;
     }
 
     setInterval(updateDateTime, 1000);
@@ -339,12 +341,13 @@
       }
 
       const totalProfit = futureValue - totalPrincipal;
+      const totalAmount = totalPrincipal + totalProfit; // Principal + Profit
+      const exciseDuty = calculateExciseDuty(totalAmount); // Excise Duty on (Principal + Profit)
       const vat = totalProfit * 0.15;
       const closingCharges = 150 * 1.15;
-      const exciseDuty = calculateExciseDuty(totalPrincipal);
 
       const netProfit = totalProfit - vat - closingCharges - exciseDuty;
-      const totalAmount = totalPrincipal + netProfit;
+      const finalAmount = totalPrincipal + netProfit;
 
       document.getElementById('mssaResult').innerHTML = `
         <strong>Results:</strong>
@@ -357,7 +360,7 @@
           <li class="charge">Excise Duty: ৳${exciseDuty.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</li>
         </ul>
         <p>Net Profit: ৳${netProfit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-        <p class="total">Final Amount: ৳${totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+        <p class="total">Final Amount: ৳${finalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
       `;
     }
 
@@ -376,12 +379,13 @@
       const profitRate = parseFloat(document.getElementById('mtdraProfitRate').value);
 
       const totalProfit = principal * (profitRate / 100) * (months / 12);
+      const totalAmount = principal + totalProfit; // Principal + Profit
+      const exciseDuty = calculateExciseDuty(totalAmount); // Excise Duty on (Principal + Profit)
       const vat = totalProfit * 0.15;
       const closingCharges = 150 * 1.15;
-      const exciseDuty = calculateExciseDuty(principal);
 
       const netProfit = totalProfit - vat - closingCharges - exciseDuty;
-      const totalAmount = principal + netProfit;
+      const finalAmount = principal + netProfit;
 
       document.getElementById('mtdraResult').innerHTML = `
         <strong>Results:</strong>
@@ -394,7 +398,7 @@
           <li class="charge">Excise Duty: ৳${exciseDuty.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</li>
         </ul>
         <p>Net Profit: ৳${netProfit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-        <p class="total">Final Amount: ৳${totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+        <p class="total">Final Amount: ৳${finalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
       `;
     }
 
