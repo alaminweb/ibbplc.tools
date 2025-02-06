@@ -61,7 +61,7 @@
     header .datetime {
       font-size: 18px;
       font-weight: bold;
-      color: var(--header-text);
+      color: #888641; /* Updated date color */
     }
 
     main {
@@ -77,7 +77,8 @@
 
     h1 {
       text-align: center;
-      color: var(--header-text);
+      color: #008641; /* Updated title color */
+      text-transform: uppercase; /* Uppercase title */
     }
 
     .navigation {
@@ -94,10 +95,12 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease; /* Button hover animation */
     }
 
     .navigation button:hover {
-      opacity: 0.9;
+      transform: translateY(-2px); /* Hover effect */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .calculator {
@@ -134,10 +137,12 @@
       border-radius: 4px;
       cursor: pointer;
       margin-right: 10px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease; /* Button hover animation */
     }
 
     .input-section button:hover {
-      opacity: 0.9;
+      transform: translateY(-2px); /* Hover effect */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .output-section {
@@ -168,6 +173,16 @@
     .output-section .total {
       font-weight: bold;
       color: var(--total-text);
+    }
+
+    .output-section ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+
+    .output-section ul li {
+      margin: 5px 0;
     }
 
     /* Responsive Design */
@@ -292,7 +307,8 @@
     // Update Date and Time
     function updateDateTime() {
       const now = new Date();
-      const dateTimeString = now.toLocaleString();
+      const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+      const dateTimeString = now.toLocaleDateString('en-GB', dateOptions).replace(/ /g, ' '); // Format: 06 Jan 2025
       document.getElementById('currentDateTime').textContent = dateTimeString;
     }
 
@@ -331,14 +347,17 @@
       const totalAmount = totalPrincipal + netProfit;
 
       document.getElementById('mssaResult').innerHTML = `
-        <strong>MSSA Results:</strong>
-        <p>Total Principal: ${totalPrincipal.toFixed(2)} Tk</p>
-        <p>Total Profit: ${totalProfit.toFixed(2)} Tk</p>
-        <p class="charge">VAT (15%): -${vat.toFixed(2)} Tk</p>
-        <p class="charge">Closing Charges: -${closingCharges.toFixed(2)} Tk</p>
-        <p class="charge">Excise Duty: -${exciseDuty.toFixed(2)} Tk</p>
-        <p>Net Profit: ${netProfit.toFixed(2)} Tk</p>
-        <p class="total">Total Amount: ${totalAmount.toFixed(2)} Tk</p>
+        <strong>Results:</strong>
+        <p>Total Principal: ৳${totalPrincipal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+        <p>Total Profit: ৳${totalProfit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+        <p>Deductions:</p>
+        <ul>
+          <li class="charge">VAT (15% on profit): ৳${vat.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</li>
+          <li class="charge">Account Closing Charges: ৳${closingCharges.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</li>
+          <li class="charge">Excise Duty: ৳${exciseDuty.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</li>
+        </ul>
+        <p>Net Profit: ৳${netProfit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+        <p class="total">Final Amount: ৳${totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
       `;
     }
 
@@ -365,14 +384,17 @@
       const totalAmount = principal + netProfit;
 
       document.getElementById('mtdraResult').innerHTML = `
-        <strong>MTDRA Results:</strong>
-        <p>Principal: ${principal.toFixed(2)} Tk</p>
-        <p>Total Profit: ${totalProfit.toFixed(2)} Tk</p>
-        <p class="charge">VAT (15%): -${vat.toFixed(2)} Tk</p>
-        <p class="charge">Closing Charges: -${closingCharges.toFixed(2)} Tk</p>
-        <p class="charge">Excise Duty: -${exciseDuty.toFixed(2)} Tk</p>
-        <p>Net Profit: ${netProfit.toFixed(2)} Tk</p>
-        <p class="total">Total Amount: ${totalAmount.toFixed(2)} Tk</p>
+        <strong>Results:</strong>
+        <p>Principal: ৳${principal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+        <p>Total Profit: ৳${totalProfit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+        <p>Deductions:</p>
+        <ul>
+          <li class="charge">VAT (15% on profit): ৳${vat.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</li>
+          <li class="charge">Account Closing Charges: ৳${closingCharges.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</li>
+          <li class="charge">Excise Duty: ৳${exciseDuty.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</li>
+        </ul>
+        <p>Net Profit: ৳${netProfit.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+        <p class="total">Final Amount: ৳${totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
       `;
     }
 
@@ -397,7 +419,7 @@
       const dueInstallments = elapsedMonths - paidInstallments;
 
       document.getElementById('installmentResult').innerHTML = `
-        <strong>Installment Results:</strong>
+        <strong>Results:</strong>
         <p>Total Installments: ${totalMonths}</p>
         <p>Elapsed Months: ${elapsedMonths}</p>
         <p>Paid Installments: ${paidInstallments}</p>
@@ -416,4 +438,14 @@
     // Excise Duty Calculation
     function calculateExciseDuty(principal) {
       if (principal <= 100000) return 0;
-      else if (principal <= 500000)
+      else if (principal <= 500000) return 150;
+      else if (principal <= 1000000) return 500;
+      else if (principal <= 5000000) return 3000;
+      else if (principal <= 10000000) return 5000;
+      else if (principal <= 20000000) return 10000;
+      else if (principal <= 50000000) return 20000;
+      else return 50000;
+    }
+  </script>
+</body>
+</html>
